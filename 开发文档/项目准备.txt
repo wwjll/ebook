@@ -1,0 +1,65 @@
+先验知识：ePubjs对ePub格式文件的操作等
+参考地址：https://git.imooc.com/coding-285/vue-imooc-ebook-chapter
+
+
+
+资源
+字体图标准备(使用svg格式）
+iconfont.cn 下载
+icomoon.io 导入并生成字体图标
+web字体：
+使用google fonts
+项目依赖包下载 + 项目配置
+准备Web字体
+viewport配置
+rem设置 + 自适应布局实现思路
+global.sccs和reset.sccs
+引入vuex
+
+
+静态资源服务器
+Nginx安装
+导入静态资源到Nginx服务器（450本电子书）
+配置文件
+常见问题及处理方法
+
+
+环境
+如果有老版本，需要先
+npm uninstall vue-cli -g
+安装新版本（vue-cli3.0）
+npm i -g @vue/cli  
+原型开发
+npm install -g @vue/cli-service-global
+创建项目
+vue create myproject
+
+
+vue-cli搭建项目
+? 使用Manually select features
+选择 Babel Router Vuex Linter/Formatter
+? Use history mode for router    no
+? Pick a linter/formatter config
+ESLint + Standard config
+? Pick additional lint features
+Lint on save
+? 不选择全部写入package.json
+In dedicated config files
+? Save this as a preset for future projects? 
+no；
+
+第三章：
+安装依赖包
+cnpm i epubjs --save
+cnpm i --save-dev node-sass sass-loader
+web字体使用方法：
+1.通过index.html里引入，给内容添加css，fonts文件放在public下
+2.在main.js通过import进相应的字体css文件，fonts文件赋值到src/assets下
+3.引入到iframe中
+viewport和rem配置：
+增加最大最小缩放比例1，设置不你能缩放
+rem属性：通过js和css控制，html根元素的font-size如果是100px;那么100px = 1rem;
+设置rem与px的标准比例（375/10）375是4.7寸iphone的屏幕宽度
+global.scss和reset.scss（从https://meyerweb.com/eric/tools/css/reset/引入）
+引入vuex+vue+devtools
+不能在chrome引入的时候使用remote vue-devtool
