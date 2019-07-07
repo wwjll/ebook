@@ -1,25 +1,25 @@
 <template>
   <div id="app">
-    <span class="test">ABCDEFG</span>
     <router-view/>
   </div>
 </template>
 
 <script>
   export default {}
+  // DOM加载完毕后设置字体
   document.addEventListener('DOMContentLoaded', () => {
     const html = document.querySelector('html')
     let fontSize = window.innerWidth / 10
+    // 移动端设置字体最大50px
     fontSize = fontSize > 50 ? 50 : fontSize
     html.style.fontSize = fontSize + 'px'
   })
 </script>
 
 <style lang="scss" scoped>
-  @import "./assets/styles/global";
-  .test{
-    font-family: 'Days One';
-    font-size: px2rem(20px);
-    color: orange;
+  #app {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
   }
 </style>

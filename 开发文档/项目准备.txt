@@ -28,7 +28,7 @@ Nginx安装
 如果有老版本，需要先
 npm uninstall vue-cli -g
 安装新版本（vue-cli3.0）
-npm i -g @vue/cli  
+npm i -g @vue/cli
 原型开发
 npm install -g @vue/cli-service-global
 创建项目
@@ -45,21 +45,7 @@ ESLint + Standard config
 Lint on save
 ? 不选择全部写入package.json
 In dedicated config files
-? Save this as a preset for future projects? 
-no；
+? Save this as a preset for future projects?
+no
 
-第三章：
-安装依赖包
-cnpm i epubjs --save
-cnpm i --save-dev node-sass sass-loader
-web字体使用方法：
-1.通过index.html里引入，给内容添加css，fonts文件放在public下
-2.在main.js通过import进相应的字体css文件，fonts文件赋值到src/assets下
-3.引入到iframe中
-viewport和rem配置：
-增加最大最小缩放比例1，设置不你能缩放
-rem属性：通过js和css控制，html根元素的font-size如果是100px;那么100px = 1rem;
-设置rem与px的标准比例（375/10）375是4.7寸iphone的屏幕宽度
-global.scss和reset.scss（从https://meyerweb.com/eric/tools/css/reset/引入）
-引入vuex+vue+devtools
-不能在chrome引入的时候使用remote vue-devtool
+
