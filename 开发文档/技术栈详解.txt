@@ -20,7 +20,7 @@ epubjs核心类介绍：
 
 项目技术难点分析
 阅读器开发：分页算法，全文搜索算法，引入Web字体，主题设计（主题影响整个界面，如何高效管理这个主题）
-离线存储机制设计：LocalStorage（只有5M）+IndexedDB(>5M),书本缓存本地
+离线存储机制设计：LocalStorage（只有5M）+ IndexedDB(>5M),书本缓存本地
 实现各种复杂手势+交互动画，兼容手势+鼠标操作
 利用vuex+minxin实现组件解耦+复用，精简代码量。
 利用es6实现数据结构变化（多维数组降维）//[].concat.map(obj => [obj, obj[sub => [sub, subtitle] ]]

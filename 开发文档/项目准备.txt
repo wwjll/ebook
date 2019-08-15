@@ -1,19 +1,20 @@
 先验知识：ePubjs对ePub格式文件的操作等
 参考地址：https://git.imooc.com/coding-285/vue-imooc-ebook-chapter
 
-
-
 资源
 字体图标准备(使用svg格式）
 iconfont.cn 下载
 icomoon.io 导入并生成字体图标
 web字体：
 使用google fonts
-项目依赖包下载 + 项目配置
+项目依赖包下载 + 项目配置：
+
 准备Web字体
 viewport配置
-rem设置 + 自适应布局实现思路
-global.sccs和reset.sccs
+rem设置 + 自适应布局实现思路：
+
+global.sccs和reset.sccs：
+
 引入vuex
 
 
