@@ -13,7 +13,9 @@ module.exports = {
     'indent': 'off',
     'no-unused-vars': 'off',
     'eol-last': 'off',
-    'no-undef': 'off'
+    'no-undef': 'off',
+    'space-before-function-paren':'off'
+
   },
   parserOptions: {
     parser: 'babel-eslint'

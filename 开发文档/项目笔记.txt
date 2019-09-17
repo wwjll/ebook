@@ -1,3 +1,11 @@
+疑问
+1.BASE_URL与publicPath的关系
+2.矢量图标（字体图标的使用）
+3.vue中this的指向
+4.vuex中acitons下的{commit, state}
+
+
+
 第三章：
 安装依赖包
 cnpm i epubjs --save
@@ -26,3 +34,7 @@ $route.params.fileName获取
 6.字体需要通过epubjs钩子函数注册到显示的独立DOM（iframe)里
 7.vue过渡动画enter,enter-to,leave,leave-to
 8.使用web-local-storage操作localstorage
+9.vue-cli3.0中的环境变量的创建和使用
+
+
+第五章

@@ -17,6 +17,7 @@
         </div>
       </div>
     </transition>
+    <ebook-slide></ebook-slide>
     <ebook-setting-font></ebook-setting-font>
     <ebook-setting-font-popup v-show="fontFamilyVisible"></ebook-setting-font-popup>
     <ebook-setting-theme></ebook-setting-theme>
@@ -30,13 +31,16 @@
   import EbookSettingFontPopup from './EbookSettingFontPopup'
   import EbookSettingTheme from './EbookSettingTheme'
   import EbookSettingProgress from './EbookSettingProgress'
+  import EbookSlide from './EbookSlide'
   export default {
     mixins: [ebookMixin],
+    name: 'EbookMenu',
     components: {
       EbookSettingFont,
       EbookSettingFontPopup,
       EbookSettingTheme,
-      EbookSettingProgress
+      EbookSettingProgress,
+      EbookSlide
     },
     methods: {
       showSetting (key) {
@@ -46,7 +50,7 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" rel="stylesheet/scss" scoped>
   @import "../../assets/styles/global";
   .menu-wrapper {
     position: absolute;

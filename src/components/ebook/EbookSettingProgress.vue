@@ -34,29 +34,48 @@
 
 <script>
   import { ebookMixin } from '../../utils/mixin'
+  import { getReadTime } from '../../utils/localStorage'
 
   export default {
     mixins: [ebookMixin],
+    computed: {
+      getSectionName() {
+        // if (this.section) {
+        //   const sectionInfo = this.currentBook.section(this.section)
+        //   if (sectionInfo && sectionInfo.href && this.currentBook && this.currentBook.navigation) {
+        //     // 章节的名称
+        //     return this.currentBook.navigation.get(sectionInfo.href).label
+        //   }
+        // }
+        // return ''
+        return this.section ? this.navigation[this.section].label : ''
+      }
+    },
     methods: {
       onProgressChange(progress) {
+        // 进度条拖动中的调用方法
         this.setProgress(progress).then(() => {
           this.displayProgress()
           this.updateProgressBg()
         })
       },
+      // 拖动过程中的调用方法
       onProgressInput(progress) {
         this.setProgress(progress).then(() => {
           this.updateProgressBg()
         })
       },
       displayProgress() {
+        // 进度条变化，内容跟着变化
         const cfi = this.currentBook.locations.cfiFromPercentage(this.progress / 100)
         this.display(cfi)
       },
       updateProgressBg() {
+        // 进度条样式设置，已读变黑，未读灰色
         this.$refs.progress.style.backgroundSize = `${this.progress}% 100%`
       },
       prevSection() {
+        // 上一章
         if (this.section > 0 && this.bookAvailable) {
           this.setSection(this.section - 1).then(() => {
             this.displaySection()
@@ -64,6 +83,7 @@
         }
       },
       nextSection() {
+        // 下一章，章节section从0开始
         if (this.section < this.currentBook.spine.length - 1 && this.bookAvailable) {
           this.setSection(this.section + 1).then(() => {
             this.displaySection()
@@ -71,10 +91,12 @@
         }
       },
       displaySection() {
+        // 显示当前章节内容
         const sectionInfo = this.currentBook.section(this.section)
         if (sectionInfo && sectionInfo.href) {
           this.display(sectionInfo.href)
         }
+        this.refreshLocation()
       }
     },
     updated() {
@@ -85,7 +107,6 @@
 
 <style lang="scss" rel="stylesheet/scss" scoped>
   @import "../../assets/styles/global";
-
   .setting-wrapper {
     position: absolute;
     bottom: px2rem(48);

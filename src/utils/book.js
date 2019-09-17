@@ -1,3 +1,4 @@
+import { getReadTime } from './localStorage'
 export const FONT_SIZE_LIST = [
   { fontSize: 12 },
   { fontSize: 14 },
@@ -93,3 +94,45 @@ export function removeAllCss () {
   removeCss(`${process.env.VUE_APP_RES_URL}/theme/theme_gold.css`)
   removeCss(`${process.env.VUE_APP_RES_URL}/theme/theme_night.css`)
 }
+
+export function getReadTimeByMinute(fileName) {
+  const readTime = getReadTime(fileName)
+  if (!readTime) {
+    return 0
+  } else {
+    return Math.ceil(readTime / 60)
+  }
+}
+
+export function flattern (array) {
+  return [].concat(...array.map(item => [].concat(item, ...flattern(item.subitems))))
+}
+
+// const items = [
+//   {
+//     id: 1,
+//     subitems: [
+//       {
+//         id: 2,
+//         subitems: [
+//           {
+//             id: 3,
+//             subitems: []
+//           },
+//           {
+//             id: 4,
+//             subitems: []
+//           }
+//         ]
+//       },
+//       {
+//         id: 5,
+//         subitems: []
+//       }
+//     ]
+//   },
+//   {
+//     id: 6,
+//     subitems: []
+//   }
+// ]

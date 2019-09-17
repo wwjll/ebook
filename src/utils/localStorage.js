@@ -72,8 +72,8 @@ export function getReadTime (fileName) {
   return getBookObject(fileName, 'time')
 }
 
-export function saveReadTime (fileName, theme) {
-  setBookObject(fileName, 'time', theme)
+export function saveReadTime (fileName, time) {
+  setBookObject(fileName, 'time', time)
 }
 
 export function getProgress (fileName) {

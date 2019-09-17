@@ -23,8 +23,6 @@
         this.setDefaultTheme(theme.name).then(() => {
           // 这里promise执行完后this.defaultTheme就已经等于theme.name了
           this.currentBook.rendition.themes.select(this.defaultTheme)
-          // 也可以写在这边
-          // saveTheme(this.fileName, theme.name)
           this.initGlobalStyle()
         })
         saveTheme(this.fileName, theme.name)
