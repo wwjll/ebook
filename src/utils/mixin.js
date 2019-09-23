@@ -24,7 +24,8 @@ export const ebookMixin = {
       'paginate',
       'pagelist',
       'offsetY',
-      'isBookmark'
+      'isBookmark',
+      'currentThemeColor'
     ]),
     themeList () {
       return themeList(this)
@@ -50,7 +51,8 @@ export const ebookMixin = {
       'setPaginate',
       'setPagelist',
       'setOffsetY',
-      'setIsBookmark'
+      'setIsBookmark',
+      'setCurrentThemeColor'
     ]),
     initGlobalStyle () {
       removeAllCss()

@@ -26,8 +26,8 @@ export function themeList (vue) {
         body: {
           'color': '#4c5059',
           'background': '#cecece'
-          // 'padding-top': `${realPx(48)}px!important`,
-          // 'padding-bottom': `${realPx(48)}px!important`
+        //   'padding-top': `${realPx(48)}px!important`,
+        //   'padding-bottom': `${realPx(48)}px!important`
         }
       }
     },

@@ -5,7 +5,7 @@
         <div class="content" v-if="settingVisible===3">
           <div class="content-page-wrapper" v-if="bookAvailable">
             <div class="content-page">
-              <component :is="currentTab ? content: bookmark" ></component>
+              <component :is="currentTab === 1 ? content : bookmark" ></component>
             </div>
             <div class="content-page-tab">
               <div class="content-page-tap-item"
@@ -51,6 +51,7 @@
     methods: {
       selectTab(tab) {
         this.currentTab = tab
+        console.log(tab)
       }
     }
   }

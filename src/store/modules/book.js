@@ -18,7 +18,8 @@ const book = {
     paginate: '',
     pagelist: null,
     offsetY: 0,
-    isBookmark: null
+    isBookmark: null,
+    currentThemeColor: ''
   },
   mutations: {
     'SET_FILENAME': (state, fileName) => {
@@ -77,6 +78,9 @@ const book = {
     },
     'SET_IS_BOOKMARK': (state, isBookmark) => {
       state.isBookmark = isBookmark
+    },
+    'SET_CURRENT_THEME_COLOR': (state, color) => {
+      state.currentThemeColor = color
     }
   }
 }

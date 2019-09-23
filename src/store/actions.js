@@ -79,6 +79,9 @@ const actions = {
   },
   setCurrentType ({ commit }, type) {
     return commit('SET_CURRENT_TYPE', type)
+  },
+  setCurrentThemeColor ({ commit }, color) {
+    return commit('SET_CURRENT_THEME_COLOR', color)
   }
 }
 

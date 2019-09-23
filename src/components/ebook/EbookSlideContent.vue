@@ -90,23 +90,25 @@
         if (this.searchText && this.searchText.length > 0) {
           this.doSearch(this.searchText).then(
             list => {
+              this.style = 'background-color:red'
               this.searchList = list
               this.searchList.map(item => {
                 // 在摘要中高亮显示搜索内容
-                item.excerpt = item.excerpt.replace('this.searchText',
-                  `<span class="slide-search-item>${this.searchText}</span>`) // TODO:转义字符IDE提示错误
-                return item
+                // TODO v-html中的css注入失败，深层注入器不能用scss,思路是通过行内选择器直接写入
+                // ``称为模板字符串
+                item.excerpt = item.excerpt.replace(this.searchText,
+                  `<span class="highlight" style=${this.style}>${this.searchText}</span>`)
+                // return item
               })
-            }
-          )
+            })
         }
       },
-      doSearch(q) {
+      doSearch(query) {
         return Promise.all(
           // spine.spineItems就是section
           this.currentBook.spine.spineItems.map(
             section => section.load(this.currentBook.load.bind(this.currentBook))
-              .then(section.find.bind(section, q))
+              .then(section.find.bind(section, query))
               .finally(section.unload.bind(section))) // 释放内存
         ).then(results => Promise.resolve([].concat.apply([], results)))
       },
@@ -123,8 +125,11 @@
       },
       hideSearchPage() {
         this.searchVisible = false
+        this.searchText = ''
+        this.searchList = null
       },
       contentItemStyle(item) {
+        // 多级目录缩进
         return {
           marginLeft: `${px2rem(item.level * 15)}rem`
         }
@@ -248,6 +253,9 @@
         line-height: px2rem(16);
         padding: px2rem(20) 0;
         box-sizing: border-box;
+        >>> .highlight {
+          background-color: red!important;
+        }
       }
     }
   }

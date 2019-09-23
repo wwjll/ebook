@@ -1,6 +1,10 @@
 <template>
   <div class="ebook-reader">
     <div id="read"></div>
+    <div class="ebook-reader-mask"
+          @click="onMaskClick"
+          @touchmove="move"
+          @touchend="moveEnd"></div>
   </div>
 </template>
 
@@ -22,6 +26,33 @@
   export default {
     mixins: [ebookMixin],
     methods: {
+      move(e) {
+        // 值关注下拉的距离
+        let offsetY = 0
+        if (this.firstOffsetY) {
+          offsetY = e.changedTouches[0].clientY - this.firstOffsetY
+          this.setOffsetY(offsetY)
+        } else {
+          this.firstOffsetY = e.changedTouches[0].clientY
+        }
+        e.preventDefault()
+        e.stopPropagation()
+      },
+      moveEnd() {
+        this.setOffsetY(0)
+        this.firstOffsetY = null
+      },
+      onMaskClick(e) {
+        const offsetX = e.offsetX
+        const width = window.innerWidth
+        if (offsetX > 0 && offsetX < width * 0.3) {
+          this.prevPage()
+        } else if (offsetX > width * 0.7 && offsetX < width) {
+          this.nextPage()
+        } else {
+          this.toggleTitleAndMenu()
+        }
+      },
       showSetting (key) {
         this.setSettingVisible(key)
       },
@@ -108,27 +139,27 @@
           })
         })
       },
-      initGesture () {
-        this.rendition.on('touchstart', event => {
-          // 获取第一只手指的行为
-          this.startX = event.changedTouches[0].clientX
-          this.touchStartTime = event.timeStamp
-        })
-        this.rendition.on('touchend', event => {
-          const offsetX = event.changedTouches[0].clientX - this.startX
-          const time = event.timeStamp - this.touchStartTime
-          if (time < 500 && offsetX > 40) {
-            this.prevPage()
-          } else if (time < 500 && offsetX < -40) {
-            this.nextPage()
-          } else {
-            this.toggleTitleAndMenu()
-          }
-          // 禁止默认事件触发
-          event.preventDefault()
-          event.stopPropagation()
-        })
-      },
+      // initGesture () {
+      //   this.rendition.on('touchstart', event => {
+      //     // 获取第一只手指的行为
+      //     this.startX = event.changedTouches[0].clientX
+      //     this.touchStartTime = event.timeStamp
+      //   })
+      //   this.rendition.on('touchend', event => {
+      //     const offsetX = event.changedTouches[0].clientX - this.startX
+      //     const time = event.timeStamp - this.touchStartTime
+      //     if (time < 500 && offsetX > 40) {
+      //       this.prevPage()
+      //     } else if (time < 500 && offsetX < -40) {
+      //       this.nextPage()
+      //     } else {
+      //       this.toggleTitleAndMenu()
+      //     }
+      //     // 禁止默认事件触发
+      //     event.preventDefault()
+      //     event.stopPropagation()
+      //   })
+      // },
       initPage() {
         // 分页,每页显示多少字
         this.book.ready.then(() => {
@@ -172,7 +203,7 @@
         this.book = new Epub(url)
         this.setCurrentBook(this.book)
         this.initRendition()
-        this.initGesture()
+        // this.initGesture()
         this.initPage()
         this.parseBook()
       }
@@ -190,4 +221,18 @@
 
 <style lang="scss" rel="stylesheet/scss" scoped>
   @import "../../assets/styles/global";
+  .ebook-reader {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    .ebook-reader-mask {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 150;
+      top:0;
+      left:0;
+      background: transparent;
+    }
+  }
 </style>
