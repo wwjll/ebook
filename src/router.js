@@ -18,6 +18,17 @@ export default new Router({
           component: () => import('./components/ebook/EbookReader.vue')
         }
       ]
+    },
+    {
+      path: '/store',
+      redirect: '/store/home',
+      component: () => import('./views/store/index.vue'),
+      children: [
+        {
+          path: 'home',
+          component: () => import('./views/store/StoreHome.vue')
+        }
+      ]
     }
   ]
 })

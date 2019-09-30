@@ -4,7 +4,10 @@
     <div class="ebook-reader-mask"
           @click="onMaskClick"
           @touchmove="move"
-          @touchend="moveEnd"></div>
+          @touchend="moveEnd"
+          @mousedown.left="onMouseEnter"
+          @mousemove.left="onMouseMove"
+          @mouseup.left="onMouseEnd"></div>
   </div>
 </template>
 
@@ -26,6 +29,47 @@
   export default {
     mixins: [ebookMixin],
     methods: {
+      // 1 - 鼠标进入
+      // 2 - 鼠标进入后的移动
+      // 3 - 鼠标从移动状态松手
+      // 4 - 鼠标还原 (鼠标在遮罩层上但是什么都没做)
+      onMouseEnd(e) {
+        if (this.mouseState === 2) {
+          this.setOffsetY(0)
+          this.firstOffsetY = null
+          this.mouseState = 3
+        } else {
+          this.mouseState = 4
+        }
+        const time = e.timeStamp - this.mouseStartTime
+        if (time < 100) {
+          // 这里是鼠标点击左键时有可能带有轻微的移动，这种情况要被视为还原状态，优化体验
+          this.mouseState = 4
+        }
+        e.preventDefault()
+        e.stopPropagation()
+      },
+      onMouseMove(e) {
+        if (this.mouseState === 1) {
+          this.mouseState = 2
+        } else if (this.mouseState === 2) {
+          let offsetY = 0
+          if (this.firstOffsetY) {
+            offsetY = e.clientY - this.firstOffsetY
+            this.setOffsetY(offsetY)
+          } else {
+            this.firstOffsetY = e.clientY
+          }
+        }
+        e.preventDefault()
+        e.stopPropagation()
+      },
+      onMouseEnter(e) {
+        this.mouseState = 1
+        this.mouseStartTime = e.timeStamp
+        e.preventDefault()
+        e.stopPropagation()
+      },
       move(e) {
         // 值关注下拉的距离
         let offsetY = 0
@@ -117,7 +161,9 @@
         this.rendition = this.book.renderTo('read', {
           width: innerWidth,
           height: innerHeight,
-          method: 'default' // 微信兼容性设置
+          // method: 'scrolled',
+          // 阅读器阅读模式
+          method: 'default'
         })
         const location = getLocation(this.fileName)
         this.display(location, () => {
@@ -161,15 +207,45 @@
       //   })
       // },
       initPage() {
-        // 分页,每页显示多少字
+        // 分页,每页显示多少字并实现分页算法
         this.book.ready.then(() => {
           // 粗略地计算每页字数
           return this.book.locations.generate(750 * this.innerWidth / 375 * (getFontSize(this.fileName) / 16))
-        }).then(() => {
-          // console.log(location)
+        }).then(locations => {
+          this.navigation.forEach(nav => {
+            nav.pageList = []
+          })
+          // console.log(locations)
+          locations.forEach(item => {
+            // 分页算法，通过this.navigation中的每个item的item中截取[]中的内容
+            // 与location中每一项的.href(A335279_1_En_BookFrontmatter_OnlinePDF.html)的内容一样
+            // （这个内容就是要显示的html内容），来进行分页
+            const loc = item.match(/\[.*\]!/)[0].slice(1, -2)
+            this.navigation.forEach(nav => {
+              if (nav.href) {
+                const href = nav.href.match(/^(.*)\.html$/)[1]
+                if (href === loc) {
+                  nav.pageList.push(item)
+                }
+              }
+            })
+          })
+          // console.log(this.navigation)
+          this.currentPage = 1
+          this.navigation.forEach((nav, index) => {
+            if (index === 0) {
+              // page字段定义了当前章节的起始页码
+              nav.page = 1
+            } else {
+              nav.page = this.currentPage
+            }
+            this.currentPage += nav.pageList.length + 1
+          })
+          this.setPagelist(locations)
           this.setBookAvailable(true)
           // 分页完成后刷新位置，这样progress的值才不是null
           this.refreshLocation()
+          // console.log(this.navigation)
         })
       },
       parseBook() {

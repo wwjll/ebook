@@ -24,10 +24,14 @@
       </div>
       <div class="slide-content-book-info-wrapper">
         <div class="slide-content-book-title">
-          {{metadata.title}}
+          <span class="slide-content-book-title-text">
+            {{metadata.title}}
+          </span>
         </div>
         <div class="slide-content-book-author">
-          {{metadata.creator}}
+          <span class="slide-content-book-author-text">
+            {{metadata.creator}}
+          </span>
         </div>
       </div>
       <div class="slide-content-book-progress-wrapper">
@@ -50,7 +54,7 @@
               :style="contentItemStyle(item)"
               :class="{ 'selected': section === index}"
               @click="displayContent(item.href)">{{ item.label }}</span>
-        <span class="slide-content-item-page"></span>
+        <span class="slide-content-item-page">{{item.page}}</span>
       </div>
     </scroll>
     <scroll class="slide-search-list"
@@ -181,9 +185,8 @@
     .slide-content-book-wrapper{
       display: flex;
       width: 100%;
-      height: px2rem(90);
-      padding: px2rem(10) px2rem(15) px2rem(20) px2rem(15);
       .slide-content-book-img-wrapper{
+        padding: px2rem(10) px2rem(15) px2rem(20) px2rem(15);
         flex:0 0 px2rem(45);
         .slide-content-book-img{
           width: px2rem(45);
@@ -191,23 +194,33 @@
         }
       }
       .slide-content-book-info-wrapper{
-        padding: 0 px2rem(10);
+        padding: px2rem(10) 0;
         box-sizing: border-box;
         .slide-content-book-title{
           /*375*0.85-30-20-45-70=153.75*/
-          width: px2rem(153.75);
-          font-size: px2rem(16);
-          @include ellipsis2(2);
+          /*width: px2rem(153.75);*/
+          font-size: px2rem(14);
+          line-height: px2rem(16);
+          @include left;
+          .slide-content-book-title-text {
+            display: flex;
+            @include ellipsis2(3);
+          }
         }
         .slide-content-book-author{
-          width: px2rem(153.75);
-          @include ellipsis;
+          /*width: px2rem(153.75);*/
           margin-top: px2rem(5);
           font-size:px2rem(12);
+          line-height: px2rem(14);
+          @include left;
+          .slide-content-book-author-text {
+            @include ellipsis2(1);
+          }
         }
       }
       .slide-content-book-progress-wrapper{
         flex: 0 0 px2rem(70);
+        padding: px2rem(10) px2rem(10);
         .slide-content-book-progress{
           .progress{
             font-size: px2rem(14)

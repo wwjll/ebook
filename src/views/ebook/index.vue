@@ -1,26 +1,33 @@
 <template>
   <div class="ebook" ref="ebook">
-    <ebook-reader></ebook-reader>
     <ebook-title></ebook-title>
+    <ebook-header></ebook-header>
+    <ebook-reader></ebook-reader>
+    <ebook-footer></ebook-footer>
     <ebook-menu></ebook-menu>
     <ebook-bookmark></ebook-bookmark>
   </div>
 </template>
 
 <script>
-  import EbookReader from '../../components/ebook/EbookReader'
   import EbookTitle from '../../components/ebook/EbookTitle'
+  import EbookHeader from '../../components/ebook/EbookHeader'
+  import EbookReader from '../../components/ebook/EbookReader'
+  import EbookFooter from '../../components/ebook/EbookFooter'
   import EbookMenu from '../../components/ebook/EbookMenu'
   import EbookBookmark from '../../components/ebook/EbookBookmark'
   import { getReadTime, saveReadTime } from '../../utils/localStorage'
+
   // 许多公共属性与方法定义在mixin中，如果没引入会有undefined的值，localStorage中的undefined-info
   import { ebookMixin } from '../../utils/mixin'
   // import { log } from '../../utils/convience'
   export default {
     mixins: [ ebookMixin ],
     components: {
-      EbookReader,
       EbookTitle,
+      EbookHeader,
+      EbookReader,
+      EbookFooter,
       EbookMenu,
       EbookBookmark
     },

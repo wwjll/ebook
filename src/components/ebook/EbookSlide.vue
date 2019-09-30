@@ -51,7 +51,6 @@
     methods: {
       selectTab(tab) {
         this.currentTab = tab
-        console.log(tab)
       }
     }
   }

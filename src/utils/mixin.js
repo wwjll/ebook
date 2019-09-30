@@ -1,7 +1,7 @@
 // 使用频次高的公共方法
 import { mapGetters, mapActions } from 'vuex'
 import { themeList, addCss, removeAllCss, getReadTimeByMinute } from './book'
-import { saveLocation } from './localStorage'
+import { getBookmark, saveLocation } from './localStorage'
 
 export const ebookMixin = {
   computed: {
@@ -29,6 +29,17 @@ export const ebookMixin = {
     ]),
     themeList () {
       return themeList(this)
+    },
+    getSectionName() {
+      // if (this.section) {
+      //   const sectionInfo = this.currentBook.section(this.section)
+      //   if (sectionInfo && sectionInfo.href && this.currentBook && this.currentBook.navigation) {
+      //     // 章节的名称
+      //     return this.currentBook.navigation.get(sectionInfo.href).label
+      //   }
+      // }
+      // return ''
+      return this.section ? this.navigation[this.section].label : ''
     }
   },
   methods: {
@@ -85,6 +96,29 @@ export const ebookMixin = {
         this.setProgress(Math.floor(progress * 100))
         this.setSection(currentLocation.start.index)
         saveLocation(this.fileName, StarCfi)
+        const bookmark = getBookmark(this.fileName)
+        if (bookmark) {
+          if (bookmark.some(item => item.cfi === StarCfi)) {
+            this.setIsBookmark(true)
+          } else {
+            this.setIsBookmark(false)
+          }
+        } else {
+          this.setIsBookmark(false)
+        }
+        if (this.pagelist) {
+          // 页脚信息设置
+          const totalPage = this.pagelist.length
+          // epubjs框架计算的页码值不精确，页脚信息用百分比进度比较准确
+          const currentPage = currentLocation.start.location
+          if (currentPage && currentPage > 0) {
+            this.setPaginate(currentPage + ' / ' + totalPage)
+          } else {
+            this.setPaginate('')
+          }
+        } else {
+          this.setPaginate('')
+        }
       }
     },
     display(target, callback) {
@@ -108,6 +142,25 @@ export const ebookMixin = {
     },
     getReadTimeText() {
       return this.$t('book.haveRead').replace('$1', getReadTimeByMinute(this.fileName))
+    }
+  }
+}
+export const storeHomeMixin = {
+  computed: {
+    ...mapGetters([
+      'offsetY',
+      'hotSearchOffsetY',
+      'flapCardVisible'
+    ])
+  },
+  methods: {
+    ...mapActions([
+      'setOffsetY',
+      'setHotSearchOffsetY',
+      'setFlapCardVisible'
+    ]),
+    showBookDetail(book) {
+      gotoBookDetail(this, book)
     }
   }
 }
