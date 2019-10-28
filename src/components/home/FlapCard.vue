@@ -1,6 +1,6 @@
 <template>
   <div class="flap-card-wrapper" v-show="flapCardVisible">
-    <div class="flap-card-bg" :class="{'animation': runFlapCardAnimation}" v-show="runFlapCardAnimation">
+    <div class="flap-card-bg" :class="{'animation': this.runFlapCardAnimation}" v-show="runFlapCardAnimation">
       <div class="flap-card" v-for="(item, index) in flapCardList" :key="index" :style="{zIndex: item.zIndex}">
         <div class="flap-card-circle">
           <div class="flap-card-semi-circle flap-card-semi-circle-left" :style="semiCircleStyle(item, 'left')"
@@ -35,7 +35,7 @@
 <script>
   import { storeHomeMixin } from '../../utils/mixin'
   import { flapCardList, categoryText } from '../../utils/store'
-
+  import Scroll from '../common/Scroll'
   export default {
     mixins: [storeHomeMixin],
     props: {
@@ -47,7 +47,7 @@
         front: 0,
         back: 1,
         intervalTime: 25,
-        runFlapCardAnimation: false,
+        runFlapCardAnimation: false, // 卡片登场动画
         pointList: null,
         runPointAnimation: false,
         runBookCardAnimation: false
@@ -66,6 +66,7 @@
         this.setFlapCardVisible(false)
       },
       semiCircleStyle(item, dir) {
+        // 设置左右半圆div的图片css
         return {
           backgroundColor: `rgb(${item.r}, ${item.g}, ${item.b})`,
           backgroundSize: item.backgroundSize,
@@ -90,13 +91,15 @@
         frontFlapCard._g -= 5
         backFlapCard.rotateDegree -= 10
         if (backFlapCard.rotateDegree < 90) {
+          // 当背面转动到临界值继续往左翻动，显示颜色逐渐变浅
           backFlapCard._g += 5
         }
         if (frontFlapCard.rotateDegree === 90 && backFlapCard.rotateDegree === 90) {
+          // 正面卡片转过90度且背面卡片也转动90度的时候，背面卡片的zIndex+2,
           backFlapCard.zIndex += 2
         }
         this.rotate(this.front, 'front')
-        this.rotate(this.back, 'back')
+        this.rotate(this.back, 'back')// css设置backface-visibility:false,否则会看到前后卡片一起转动
         if (frontFlapCard.rotateDegree === 180 && backFlapCard.rotateDegree === 0) {
           this.next()
         }
@@ -110,6 +113,7 @@
         backFlapCard._g = backFlapCard.g
         this.rotate(this.front, 'front')
         this.rotate(this.back, 'back')
+        // 上面是第一组操作完成后做还原
         this.front++
         this.back++
         const len = this.flapCardList.length
@@ -133,12 +137,14 @@
         this.prepare()
       },
       prepare() {
+        // 每次开始动画之前需要先设置背面左右半圆重叠，背面的左侧和正面的右侧重叠，然后同时开始转动，转过90度的时候就改变zIndex在左半圆区域显示出来
         const backFlapCard = this.flapCardList[this.back]
         backFlapCard.rotateDegree = 180
-        backFlapCard._g = backFlapCard.g - 5 * 9
         this.rotate(this.back, 'back')
+        backFlapCard._g = backFlapCard.g - 5 * 9 // 到达临界状态之前转动了9次，颜色预先设置加深，但不改变dom
       },
       reset() {
+        // 每次结束卡片动画后把所有状态还原
         this.front = 0
         this.back = 1
         this.flapCardList.forEach((item, index) => {
@@ -155,6 +161,7 @@
       startFlapCardAnimation() {
         this.prepare()
         this.task = setInterval(() => {
+          // 卡片翻转动画
           this.flapCardRotate()
         }, this.intervalTime)
       },
@@ -195,6 +202,9 @@
         }
       }
     },
+    // mounted() {
+    //   console.log(this.data)
+    // },
     created() {
       this.pointList = []
       for (let i = 0; i < 18; i++) {
@@ -206,44 +216,46 @@
 
 <style lang="scss" rel="stylesheet/scss" scoped>
   @import "../../assets/styles/global";
-  /*@import "../../assets/styles/flapCard";*/
-
+  @import "../../assets/styles/flapCard";
   .flap-card-wrapper {
-    z-index: 1000;
     width: 100%;
     height: 100%;
+    z-index: 1000;
     background: rgba(0, 0, 0, .6);
-    @include center;
     @include absCenter;
+    @include center;
     .flap-card-bg {
       position: relative;
       width: px2rem(64);
       height: px2rem(64);
-      border-radius: px2rem(5);
       background: white;
+      border-radius: px2rem(5);
+      @include absCenter;
+      /*默认状态*/
       transform: scale(0);
       opacity: 0;
-      /*&.animation {*/
-      /*  animation: flap-card-move .3s ease-in both;*/
-      /*}*/
-      /*@keyframes flap-card-move {*/
-      /*  0% {*/
-      /*    transform: scale(0);*/
-      /*    opacity: 0;*/
-      /*  }*/
-      /*  50% {*/
-      /*    transform: scale(1.2);*/
-      /*    opacity: 1;*/
-      /*  }*/
-      /*  75% {*/
-      /*    transform: scale(.9);*/
-      /*    opacity: 1;*/
-      /*  }*/
-      /*  100% {*/
-      /*    transform: scale(1);*/
-      /*    opacity: 1;*/
-      /*  }*/
-      /*}*/
+      &.animation {
+        /*both属性设置关键帧动画保存在100%*/
+        animation: flap-card-animation .3s ease-in both;
+      }
+      @keyframes flap-card-animation {
+        0% {
+          transform: scale(0);
+          opacity: 0;
+        }
+        50% {
+          transform: scale(1.2);
+          opacity: 1;
+        }
+        75% {
+          transform: scale(0.9);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
       .flap-card {
         width: px2rem(48);
         height: px2rem(48);
@@ -252,7 +264,7 @@
           display: flex;
           width: 100%;
           height: 100%;
-          .flap-card-semi-circle {
+          .flap-card-semi-circle{
             flex: 0 0 50%;
             width: 50%;
             height: 100%;
@@ -279,8 +291,9 @@
           @include absCenter;
           &.animation {
             @for $i from 1 to length($moves) {
-              &:nth-child(#{$i}) {
-                @include move($i);
+              /*给多个同级class=point的dom设置属性*/
+              &:nth-child(#{$i}){
+                @include move($i)
               }
             }
           }
@@ -310,7 +323,7 @@
       .book-card-wrapper {
         width: 100%;
         height: 100%;
-        margin-bottom: px2rem(30);
+        margin-bottom: px2rem(50);
         @include columnTop;
         .img-wrapper {
           width: 100%;
@@ -324,6 +337,7 @@
         .content-wrapper {
           padding: 0 px2rem(20);
           margin-top: px2rem(20);
+          margin-bottom: 0;
           .content-title {
             color: #333;
             font-weight: bold;
@@ -336,6 +350,7 @@
           .content-author {
             margin-top: px2rem(10);
             text-align: center;
+            font-size: px2rem(15);
           }
           .content-category {
             color: #999;
@@ -346,8 +361,8 @@
         }
         .read-btn {
           position: absolute;
-          bottom: 0;
           left: 0;
+          bottom:0;
           z-index: 1100;
           width: 100%;
           border-radius: 0 0 px2rem(15) px2rem(15);
@@ -361,19 +376,20 @@
     }
     .close-btn-wrapper {
       position: absolute;
-      left: 0;
-      bottom: px2rem(30);
-      z-index: 1100;
+      left:0;
+      bottom:px2rem(30);
+      z-index:1100;
       width: 100%;
       @include center;
       .icon-close {
         width: px2rem(45);
         height: px2rem(45);
-        border-radius: 50%;
-        background: #333;
-        font-size: px2rem(25);
+        font-size:px2rem(25);
+        border-radius:50%;
+        background: #333333;
         color: white;
         @include center;
       }
     }
   }
+</style>

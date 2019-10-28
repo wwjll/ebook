@@ -4,8 +4,8 @@ const store = {
     flapCardVisible: false,
     isEditMode: false,
     shelfList: [],
-    shelfSelected: [],
     shelfTitleVisible: true,
+    shelfSelected: [], // 书架图书选中列表
     shelfCategory: [], // 书架分类列表数据
     currentType: 1 // 书架列表为1，书架分类列表为2
   },

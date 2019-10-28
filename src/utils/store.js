@@ -53,6 +53,7 @@ export function findBook(fileName) {
 }
 
 export function computeId(list) {
+  // 书架中对图书添加移除后，每本book的id需要重新计算
   return list.map((book, index) => {
     if (book.type !== 3) {
       book.id = index + 1
@@ -81,14 +82,16 @@ export function gotoStoreHome(vue) {
 }
 
 export function appendAddToShelf(list) {
+  // 添加（type=3）的加号
   list.push({
-    id: -1,
+    id: -1, // 保证新增组件总是在最后
     type: 3
   })
   return list
 }
 
 export function removeAddFromShelf(list) {
+  // 把最后一个加号（type=3)排除掉
   return list.filter(item => item.type !== 3)
 }
 

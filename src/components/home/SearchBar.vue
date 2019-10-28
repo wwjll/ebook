@@ -49,7 +49,7 @@
     },
     watch: {
       offsetY(offsetY) {
-        console.log(offsetY)
+        // console.log(offsetY)
         if (offsetY > 0) {
           this.hideTitle()
           this.showShadow()

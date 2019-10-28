@@ -14,7 +14,7 @@
 <script>
   import { ebookMixin } from '../../utils/mixin'
   import { flattern } from '../../utils/book'
-  import { log } from '../../utils/utils'
+  // import { log } from '../../utils/utils'
   import {
     getFontFamily,
     getFontSize,
@@ -25,6 +25,7 @@
     getLocation
   } from '../../utils/localStorage'
   import Epub from 'epubjs'
+  import { getLocalForage } from '../../utils/localForage'
   global.ePub = Epub
   export default {
     mixins: [ebookMixin],
@@ -117,7 +118,6 @@
         }
       },
       toggleTitleAndMenu () {
-        // console.log('menu and title')
         if (this.menuVisible) {
           this.setFontFamilyVisible(false)
           this.showSetting(-1)
@@ -161,7 +161,7 @@
         this.rendition = this.book.renderTo('read', {
           width: innerWidth,
           height: innerHeight,
-          // method: 'scrolled',
+          // method: 'scrolled'
           // 阅读器阅读模式
           method: 'default'
         })
@@ -185,47 +185,30 @@
           })
         })
       },
-      // initGesture () {
-      //   this.rendition.on('touchstart', event => {
-      //     // 获取第一只手指的行为
-      //     this.startX = event.changedTouches[0].clientX
-      //     this.touchStartTime = event.timeStamp
-      //   })
-      //   this.rendition.on('touchend', event => {
-      //     const offsetX = event.changedTouches[0].clientX - this.startX
-      //     const time = event.timeStamp - this.touchStartTime
-      //     if (time < 500 && offsetX > 40) {
-      //       this.prevPage()
-      //     } else if (time < 500 && offsetX < -40) {
-      //       this.nextPage()
-      //     } else {
-      //       this.toggleTitleAndMenu()
-      //     }
-      //     // 禁止默认事件触发
-      //     event.preventDefault()
-      //     event.stopPropagation()
-      //   })
-      // },
       initPage() {
         // 分页,每页显示多少字并实现分页算法
         this.book.ready.then(() => {
+          // console.log('ready')
           // 粗略地计算每页字数
           return this.book.locations.generate(750 * this.innerWidth / 375 * (getFontSize(this.fileName) / 16))
         }).then(locations => {
           this.navigation.forEach(nav => {
-            nav.pageList = []
+            nav.pagelist = []
           })
           // console.log(locations)
           locations.forEach(item => {
             // 分页算法，通过this.navigation中的每个item的item中截取[]中的内容
             // 与location中每一项的.href(A335279_1_En_BookFrontmatter_OnlinePDF.html)的内容一样
             // （这个内容就是要显示的html内容），来进行分页
-            const loc = item.match(/\[.*\]!/)[0].slice(1, -2)
+            const loc = item.match(/\[(.*)\]!/)[1]
             this.navigation.forEach(nav => {
               if (nav.href) {
-                const href = nav.href.match(/^(.*)\.html$/)[1]
-                if (href === loc) {
-                  nav.pageList.push(item)
+                // console.log(nav.href)
+                const href = nav.href.match(/^(.*)\.html$/)
+                if (href) {
+                  if (href[1] === loc) {
+                    nav.pagelist.push(item)
+                  }
                 }
               }
             })
@@ -239,7 +222,7 @@
             } else {
               nav.page = this.currentPage
             }
-            this.currentPage += nav.pageList.length + 1
+            this.currentPage += nav.pagelist.length + 1
           })
           this.setPagelist(locations)
           this.setBookAvailable(true)
@@ -273,23 +256,32 @@
           this.setNavigation(NavItem)
         })
       },
-      initEpub () {
-        const url = 'http://127.0.0.1:9001/epub/' +
-          this.fileName + '.epub'
+      initEpub (url) {
+        // const uri = 'http://localhost:9001/epub/LifeSciences/2016_Book_TechnologicalAndInstitutionalI.epub'
         this.book = new Epub(url)
         this.setCurrentBook(this.book)
         this.initRendition()
-        // this.initGesture()
-        this.initPage()
         this.parseBook()
+        this.initPage()
       }
     },
     mounted () {
-      const fileName = this.$route.params.fileName.split('|')
-        .join('/')
-      this.setFileName(fileName)
-        .then(() => {
-          this.initEpub()
+      const books = this.$route.params.fileName.split('|')
+      getLocalForage(books[1], (err, blob) => {
+        if (!err && blob) {
+          console.log('Find cached ebook')
+          this.setFileName(books.join('/')).then(() => {
+            this.initEpub(blob)
+          })
+        } else {
+          this.setFileName(books.join('/'))
+            .then(() => {
+              console.log('Acquire ebook online')
+              const url = process.env.VUE_APP_RES_URL + '/epub/' + this.fileName + '.epub'
+              // console.log(url)
+              this.initEpub(url)
+            })
+          }
         })
       }
     }

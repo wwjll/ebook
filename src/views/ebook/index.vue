@@ -18,9 +18,7 @@
   import EbookBookmark from '../../components/ebook/EbookBookmark'
   import { getReadTime, saveReadTime } from '../../utils/localStorage'
 
-  // 许多公共属性与方法定义在mixin中，如果没引入会有undefined的值，localStorage中的undefined-info
   import { ebookMixin } from '../../utils/mixin'
-  // import { log } from '../../utils/convience'
   export default {
     mixins: [ ebookMixin ],
     components: {

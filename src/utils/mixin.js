@@ -1,7 +1,8 @@
-// 使用频次高的公共方法
 import { mapGetters, mapActions } from 'vuex'
 import { themeList, addCss, removeAllCss, getReadTimeByMinute } from './book'
-import { getBookmark, saveLocation } from './localStorage'
+import { getBookmark, saveLocation, getBookShelf, saveBookShelf } from './localStorage'
+import { appendAddToShelf, gotoBookDetail, computeId, removeAddFromShelf } from './store'
+import { shelf } from '../api/store'
 
 export const ebookMixin = {
   computed: {
@@ -37,6 +38,7 @@ export const ebookMixin = {
       //     // 章节的名称
       //     return this.currentBook.navigation.get(sectionInfo.href).label
       //   }
+      //   return this.currentBook.navigation.get(sectionInfo.href).label
       // }
       // return ''
       return this.section ? this.navigation[this.section].label : ''
@@ -145,6 +147,7 @@ export const ebookMixin = {
     }
   }
 }
+
 export const storeHomeMixin = {
   computed: {
     ...mapGetters([
@@ -161,6 +164,75 @@ export const storeHomeMixin = {
     ]),
     showBookDetail(book) {
       gotoBookDetail(this, book)
+    }
+  }
+}
+
+export const storeShelfMixin = {
+  computed: {
+    ...mapGetters([
+      'isEditMode',
+      'shelfList',
+      'shelfSelected',
+      'shelfTitleVisible',
+      'offsetY',
+      'shelfCategory',
+      'currentType'
+    ])
+  },
+  methods: {
+    ...mapActions([
+      'setIsEditMode',
+      'setShelfList',
+      'setShelfSelected',
+      'setShelfTitleVisible',
+      'setOffsetY',
+      'setShelfCategory',
+      'setCurrentType'
+    ]),
+    showBookDetail(book) {
+      gotoBookDetail(this, book)
+    },
+    getShelfList() {
+      // 书架信息缓存到localStorage, 没有的时候才请求接口获取
+      let shelfList = getBookShelf()
+      if (!shelfList) {
+        shelf().then(response => {
+          if (response.status === 200 && response.data && response.data.bookList) {
+            let shelfList = appendAddToShelf(response.data.bookList)
+            saveBookShelf(shelfList)
+            return this.setShelfList(shelfList)
+          }
+        })
+      } else {
+        return this.setShelfList(shelfList)
+      }
+    },
+    getCategoryList(title) {
+      this.getShelfList().then(() => {
+        const categoryList = this.shelfList.filter(book =>
+          book.type === 2 && book.title === title)[0]
+        this.setShelfCategory(categoryList)
+      })
+    },
+    moveOutOfGroup(f) {
+      this.setShelfList(this.shelfList.map(item => {
+        if (item.type === 2 && item.itemList) {
+          item.itemList = item.itemList.filter(subItem => !subItem.selected)
+        }
+        return item
+      })).then(() => {
+        // let list = removeAddFromShelf(this.shelfList)
+        // list = [].concat(list, ...this.shelfSelected)
+        // list = computeId(list)
+        // list = appendAddToShelf(list)
+        const list = appendAddToShelf(computeId([].concat(
+          removeAddFromShelf(this.shelfList), ...this.shelfSelected)))
+        this.setShelfList(list).then(() => {
+          this.simpletoast(this.$t('shelf.moveBookOutSuccess'))
+          if (f) f()
+        })
+      })
     }
   }
 }

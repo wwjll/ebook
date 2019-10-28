@@ -9,6 +9,7 @@ epubjs核心类介绍：
 2.Rendition：阅读器渲染
 3.Locations:阅读器定位
 4.Navigation：阅读器导航
+    .toc:
 5.View Manager:渲染出的视图管理
 6.EpubCFI:文字级别定位（任一字符定位）
 7.Theme:管理字体

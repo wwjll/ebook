@@ -49,7 +49,7 @@
       hide () {
         this.setFontFamilyVisible(false)
       }
-    },
+    }
   }
 </script>
 
