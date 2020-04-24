@@ -77,9 +77,9 @@
         const item = this.flapCardList[index]
         let dom
         if (type === 'front') {
-          dom = this.$refs.right[index]
-        } else {
           dom = this.$refs.left[index]
+        } else {
+          dom = this.$refs.right[index]
         }
         dom.style.transform = `rotateY(${item.rotateDegree}deg)`
         dom.style.backgroundColor = `rgb(${item.r}, ${item._g}, ${item.b})`
@@ -131,6 +131,9 @@
         // 96 -> 97
         // (0 - 1 + 5) % 5 = 4
         // (1 - 1 + 5) % 5 = 0
+        // (2 - 1 + 5) % 5 = 
+        // (3 - 1 + 5) % 5
+        // (4 - 1 + 5) % 5
         this.flapCardList.forEach((item, index) => {
           item.zIndex = 100 - ((index - this.front + len) % len)
         })

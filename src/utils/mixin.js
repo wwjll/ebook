@@ -111,8 +111,9 @@ export const ebookMixin = {
         if (this.pagelist) {
           // 页脚信息设置
           const totalPage = this.pagelist.length
-          // epubjs框架计算的页码值不精确，页脚信息用百分比进度比较准确
+          // epubjs 计算的页码值不精确，页脚信息用百分比进度比较准确
           const currentPage = currentLocation.start.location
+          // console.log(currentLocation.start)
           if (currentPage && currentPage > 0) {
             this.setPaginate(currentPage + ' / ' + totalPage)
           } else {

@@ -40,13 +40,13 @@
     mixins: [ebookMixin],
     methods: {
       onProgressChange(progress) {
-        // 进度条拖动中的调用方法
+        // 进度条拖动中的调用方法，一改变就触发
         this.setProgress(progress).then(() => {
           this.displayProgress()
           this.updateProgressBg()
         })
       },
-      // 拖动过程中的调用方法
+      // 拖动过程中的调用方法，需要按回车，移动端需要确认
       onProgressInput(progress) {
         this.setProgress(progress).then(() => {
           this.updateProgressBg()

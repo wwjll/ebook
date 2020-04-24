@@ -18,9 +18,11 @@ const flatListData = require('./src/mock/bookFlatList')
 module.exports = {
   publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
   devServer: {
+    port: 8081,
+    open: false,
     // proxy: {
-    //   'http://localhost:8081/': {
-    //     target: 'http://182.168.1.101',
+    //    'http://localhost:8081/': {
+    //     target: 'http://182.168.1.102:9001/',
     //     ws: true,
     //     changeOrigin: true
     //   }

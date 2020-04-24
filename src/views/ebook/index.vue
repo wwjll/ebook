@@ -44,6 +44,7 @@
       restore() {
         this.$refs.ebook.style.top = 0
         this.$refs.ebook.style.transition = 'all .2s linear'
+        // 清除动画，实现顺畅体验
         setTimeout(() => {
           this.$refs.ebook.style.transition = ''
         }, 200)

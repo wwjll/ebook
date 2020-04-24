@@ -72,7 +72,7 @@
         e.stopPropagation()
       },
       move(e) {
-        // 值关注下拉的距离
+        // 只关注下拉的距离
         let offsetY = 0
         if (this.firstOffsetY) {
           offsetY = e.changedTouches[0].clientY - this.firstOffsetY
@@ -197,8 +197,8 @@
           })
           // console.log(locations)
           locations.forEach(item => {
-            // 分页算法，通过this.navigation中的每个item的item中截取[]中的内容
-            // 与location中每一项的.href(A335279_1_En_BookFrontmatter_OnlinePDF.html)的内容一样
+            // 分页算法，通过this.location 中的每个item的item中截取[]中的内容
+            // 与 navigation 中每一项的.href(A335279_1_En_BookFrontmatter_OnlinePDF.html)的内容一样
             // （这个内容就是要显示的html内容），来进行分页
             const loc = item.match(/\[(.*)\]!/)[1]
             this.navigation.forEach(nav => {

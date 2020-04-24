@@ -41,7 +41,7 @@
       isEditMode(isEditMode) {
         this.scrollBottom = isEditMode ? realPx(48) : 0
         this.$nextTick(() => {
-          // isEditModeÖµ²úÉú±ä»¯Ê±ÓĞdomµÄ±ä»¯(ÏÔÊ¾footer)£¬ËùÒÔµÈdomäÖÈ¾Íê±ÏÔÙrefresh
+          // isEditModeå€¼äº§ç”Ÿå˜åŒ–æ—¶æœ‰domçš„å˜åŒ–(æ˜¾ç¤ºfooter)ï¼Œæ‰€ä»¥ç­‰domæ¸²æŸ“å®Œæ¯•å†refresh
           this.$refs.scroll.refresh()
         })
       }

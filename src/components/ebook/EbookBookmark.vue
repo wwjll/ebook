@@ -81,9 +81,13 @@
         const cfibase = currentLocation.start.cfi.replace(/!.*/, '')
         const cfistart = currentLocation.start.cfi.replace(/.*!/, '').replace(/\)$/, '')
         const cfiend = currentLocation.end.cfi.replace(/.*!/, '').replace(/\)$/, '')
+        // cfi range 的格式
         const cfirange = `${cfibase}!,${cfistart},${cfiend})`
+        // 通过 getRange 获取文本内容
         this.currentBook.getRange(cfirange).then(range => {
+          // 打印出来的文本内容有很多空格，将两个空格的全局匹配清除
           const text = range.toString().replace(/\s\s/g, '')
+          // 把相应的内容放到 bookmark 对象里再存储到 localStorage
           this.bookmark.push({
             cfi: currentLocation.start.cfi,
             text: text

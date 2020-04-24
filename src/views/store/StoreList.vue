@@ -79,7 +79,7 @@
             // ÊµÏÖ¹Ø¼ü×ÖËÑË÷£¨SearchBarËÑË÷£©
             Object.keys(this.list).filter(key => {
               this.list[key] = this.list[key].filter(book => book.fileName.indexOf(keyword) >= 0)
-              return this.list[key].length > 0
+                return this.list[key].length > 0
             })
           }
         })
